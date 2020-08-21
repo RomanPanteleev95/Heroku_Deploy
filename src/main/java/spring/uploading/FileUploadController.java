@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Controller
 public class FileUploadController {
 
-    private static final String PATH = "C:/Users/ropa0917/IdeaProjects/Test/src/main/resources/download_files/";
+    private static final String PATH = "/src/main/resources/download_files/";
 
     @GetMapping("/test")
     public String test() {
