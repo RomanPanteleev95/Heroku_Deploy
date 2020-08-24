@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Controller
 public class FileUploadController {
 
-    private static final String PATH = "/src/main/resources/download_files/";
+    private static final String PATH = "src/main/resources/download_files/";
 
     @GetMapping("/test")
     public String test() {
@@ -32,20 +32,21 @@ public class FileUploadController {
     public String handleFileUpload(@RequestParam("name") String name, @RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             try {
+                validateTextFile(file);
                 byte[] bytes = file.getBytes();
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(PATH + name + "-upload.txt")));
                 stream.write(bytes);
                 stream.close();
-                File file1 = new File(PATH + name + "-upload.txt");
+                File file1 = new File( PATH + name + "-upload.txt");
                 FileWriter fileWriter = new FileWriter(file1);
                 fileWriter.write("Was modified");
                 fileWriter.close();
                 return "index";
             } catch (Exception e) {
-                return "Вам не удалось загрузить файл " + name + " => " + e.getMessage();
+                return "exception";
             }
         } else {
-            return "Вам не удалось загрузить файл " + name + " потому что файл пустой";
+            return "exception";
         }
     }
 
@@ -74,6 +75,12 @@ public class FileUploadController {
             filePaths.add(file.getName());
         }
         return filePaths;
+    }
+
+    private void validateTextFile(MultipartFile textFile) throws Exception {
+        if (!textFile.getContentType().equals("text/plain")) {
+            throw new Exception("Неверный формат файла");
+        }
     }
 
 
